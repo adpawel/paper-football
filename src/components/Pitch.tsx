@@ -1,55 +1,60 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Point } from '../models/Point';
+import { Modal } from 'bootstrap';
+
 
 const size_x = 500;
 const size_y = 600;
 const offset_x = 10;
 const offset_y = 40;
 const dotRadius = 5;
-const coordinates:{x:number, y:number}[] = [];
 let points:Point[] = [];
+let index = 0;
+let edges:{p1:Point, p2:Point}[] = [];
 
-const createCoordinates = () => {
-    coordinates.push({x: 4 * 60 + offset_x, y: offset_x});
-
-    for(let i = 1; i < 8; i++){
-        if(i !== 4){
-            coordinates.push({x: i * 60 + offset_x, y: offset_y});
-            coordinates.push({x: i * 60 + offset_x, y: 8 * 65 + offset_y});
-        }
-    }
-
-    for (let i = 1; i < 8; i++) {
-        for(let j = 0; j < 9; j++){
-            coordinates.push({ x: j * 60 + offset_x, y: i * 65 + offset_y});
-        }
-    }
-
-    coordinates.push({x: 4 * 60 + offset_x, y: size_y - offset_x});
+const triggerModal = () => {
+  const modalElement = document.getElementById('staticBackdrop');
+  if (modalElement) {
+    const modal = new Modal(modalElement);
+    modal.show();
+  }
 };
 
-const assignPoints = () => {
-    let index = 0;
-    points.push(new Point(4, -1, index));
+
+const createPoints = () => {
+    points.push(new Point(4 * 60 + offset_x, offset_x, index));
     index++;
 
     for(let i = 1; i < 8; i++){
-        if(i !== 4) {
-            points.push(new Point(i, 0, index));
+        if(i !== 4){
+            points.push(new Point(i * 60 + offset_x, offset_y, index));
             index++;
-            points.push(new Point(i, 8, index));
-            index++;
+            points.push(new Point(i * 60 + offset_x, 8 * 65 + offset_y, index));
+            index++; 
         }
     }
 
     for (let i = 1; i < 8; i++) {
         for(let j = 0; j < 9; j++){
-            points.push(new Point(j, i, index));
+            points.push(new Point(j * 60 + offset_x, i * 65 + offset_y, index));
             index++;
-        }
+          }
     }
-    
-    points.push(new Point(4, 9, index));
+
+    points.push(new Point(4 * 60 + offset_x, size_y - offset_x, index));
+    index++;
+
+    const radius = 90
+    for (let point of points) {
+      for (let p of points) {
+        const dx = point.x - p.x;
+        const dy = point.y - p.y;
+        if (Math.sqrt(dx * dx + dy * dy) <= radius) {
+          point.addReachablePoint(p);
+        }
+      }
+    }
+
 };
 
 const drawDot = (x:number, y:number, ctx: CanvasRenderingContext2D) => {
@@ -64,9 +69,9 @@ const setUp = (ctx: CanvasRenderingContext2D) => {
     ctx.lineWidth = 5;
     ctx.strokeStyle = "white";
 
-    createCoordinates();
-    coordinates.map((c) => (
-        drawDot(c.x, c.y, ctx)
+    createPoints();
+    points.map((p) => (
+        drawDot(p.x, p.y, ctx)
     ));
 
     // Draw field lines
@@ -107,8 +112,8 @@ const setUp = (ctx: CanvasRenderingContext2D) => {
 
 const Pitch = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [selectedPoint, setSelectedPoint] = useState<{ x: number; y: number } | null>(null); // Przechowujemy wybrany punkt
-    const [lineStart, setLineStart] = useState<{ x: number; y: number } | null>(null); // Przechowujemy początek linii
+    const [selectedPoint, setSelectedPoint] = useState<Point | null>(null); // Przechowujemy wybrany punkt
+    const [lineStart, setLineStart] = useState<Point | null>(null); // Przechowujemy początek linii
   
     useEffect(() => {
       const canvas = canvasRef.current;
@@ -117,6 +122,13 @@ const Pitch = () => {
       if (!ctx) return;
 
       setUp(ctx);
+      // setting start point
+      points.map((point) => {
+        if(point.x === size_x/2 && point.y == size_y/2){
+          setLineStart(point);
+          point.setWasReached(true);
+        }
+      });
 
       const isCursorOverDot = (cursorX: number, cursorY: number, dotX: number, dotY: number, radius: number) => {
         const dx = cursorX - dotX;
@@ -130,8 +142,8 @@ const Pitch = () => {
         let cursorOnDot = false;
       
         // Sprawdzanie, czy kursor znajduje się nad którąś z kropek
-        coordinates.forEach(c => {
-          if (isCursorOverDot(cursorX, cursorY, c.x, c.y, dotRadius)) {
+        points.forEach(p => {
+          if (isCursorOverDot(cursorX, cursorY, p.x, p.y, dotRadius)) {
             cursorOnDot = true;
           }
         });
@@ -152,12 +164,16 @@ const Pitch = () => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      if (lineStart && selectedPoint && (lineStart.x !== selectedPoint.x || lineStart.y !== selectedPoint.y)) {
+      if (lineStart && selectedPoint && lineStart.id !== selectedPoint.id) {
         ctx.beginPath();
         ctx.moveTo(lineStart.x, lineStart.y);
         ctx.lineTo(selectedPoint.x, selectedPoint.y);
         ctx.stroke();
-        setLineStart({x: selectedPoint.x, y: selectedPoint.y});
+        edges.push({p1: lineStart, p2: selectedPoint});
+        setLineStart(selectedPoint);
+        if(selectedPoint.id === 0){
+          triggerModal();
+        }
       }
     }, [selectedPoint, lineStart]);
 
@@ -168,16 +184,17 @@ const Pitch = () => {
         const cursorY = e.nativeEvent.offsetY;
     
         // Sprawdzanie, czy kliknięto na jedną z kropek
-        for (let c of coordinates) {
-          const dx = cursorX - c.x;
-          const dy = cursorY - c.y;
-          if (Math.sqrt(dx * dx + dy * dy) <= dotRadius) {
+        for (let p of points) {
+          const dx = cursorX - p.x;
+          const dy = cursorY - p.y;
+          const allowedPoint = p.reachablePoints.find(reachablePoint => reachablePoint.id === lineStart?.id);
+          if (Math.sqrt(dx * dx + dy * dy) <= dotRadius && allowedPoint !== undefined) {
             if (!lineStart) {
               // Jeśli nie ma punktu początkowego, ustaw go
-              setLineStart({ x: c.x, y: c.y });
+              setLineStart(p);
             } else {
               // Jeśli jest już punkt początkowy, rysujemy linię
-              setSelectedPoint({ x: c.x, y: c.y });
+              setSelectedPoint(p);
             }
             break;
           }
@@ -189,7 +206,6 @@ const Pitch = () => {
         ref={canvasRef}
         width={size_x}
         height={size_y}
-        style={{ border: '1px solid #000' }}
         onClick={handleCanvasClick} // Obsługuje kliknięcie na canvasie
         />
     );

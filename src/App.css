@@ -1,0 +1,15 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: #f4bfa0;
+}
+
+/* .container-fluid {
+    padding: 0;
+    margin: 0;
+} */
+
+canvas {
+    border:  10px solid #1dda3d;
+    border-radius: 20px;
+}

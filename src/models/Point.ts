@@ -3,6 +3,7 @@ export class Point {
     y: number;
     id: number;
     wasReached: boolean = false;
+    reachablePoints: Point[] = [];
   
     // Konstruktor
     constructor(x: number, y: number, id:number) {
@@ -14,6 +15,11 @@ export class Point {
     setWasReached(value:boolean): void{
         this.wasReached = value;
     }
+
+    addReachablePoint(point:Point): void {
+      this.reachablePoints.push(point);
+    }
+
   }
 
   
