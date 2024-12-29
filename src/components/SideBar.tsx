@@ -15,13 +15,13 @@
                     </li>
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" className="nav-link px-sm-0 px-2">
-                            <i className="fs-5 bi-speedometer2"></i><span className="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                            <i className="fs-5 bi-speedometer2"></i><span className="ms-1 d-none d-sm-inline">Players</span> </a>
                     </li>
                     <li>
                         <a href="#" className="nav-link px-sm-0 px-2">
-                            <i className="fs-5 bi-table"></i><span className="ms-1 d-none d-sm-inline">Orders</span></a>
+                            <i className="fs-5 bi-table"></i><span className="ms-1 d-none d-sm-inline">Stats</span></a>
                     </li>
-                    <li className="dropdown">
+                    {/* <li className="dropdown">
                         <a href="#" className="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i className="fs-5 bi-bootstrap"></i><span className="ms-1 d-none d-sm-inline">Bootstrap</span>
                         </a>
@@ -34,15 +34,7 @@
                             </li>
                             <li><a className="dropdown-item" href="#">Sign out</a></li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="#" className="nav-link px-sm-0 px-2">
-                            <i className="fs-5 bi-grid"></i><span className="ms-1 d-none d-sm-inline">Products</span></a>
-                    </li>
-                    <li>
-                        <a href="#" className="nav-link px-sm-0 px-2">
-                            <i className="fs-5 bi-people"></i><span className="ms-1 d-none d-sm-inline">Customers</span> </a>
-                    </li>
+                    </li> */}
                 </ul>
                 <div className="dropdown py-sm-4 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
                     <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
