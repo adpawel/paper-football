@@ -63,6 +63,10 @@ const drawDot = (x:number, y:number, ctx: CanvasRenderingContext2D) => {
     ctx.stroke();
 };
 
+const isEndPoint = (point:Point):boolean => {
+  return point.y === offset_x || point.y === size_y - offset_x;
+}
+
 const setUp = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, size_x, size_y);
@@ -171,7 +175,7 @@ const Pitch = () => {
         ctx.stroke();
         edges.push({p1: lineStart, p2: selectedPoint});
         setLineStart(selectedPoint);
-        if(selectedPoint.id === 0){
+        if(isEndPoint(selectedPoint)){
           triggerModal();
         }
       }

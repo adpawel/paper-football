@@ -1,3 +1,16 @@
+import Theme from "./Theme";
+
+const handleChangeColor = (color: string): void => {
+    if (color === "Color") {
+      document.body.style.backgroundColor = "#a0c4f4";
+    }
+    else if (color === "White") {
+      document.body.style.backgroundColor = "#ffffff";
+    }
+    else if(color === "Dark") {
+      document.body.style.backgroundColor = "#000000";
+    }
+  };
 
   const SideBar = () => {
     return (
@@ -13,28 +26,25 @@
                             <i className="fs-5 bi-house"></i><span className="ms-1 d-none d-sm-inline">Home</span>
                         </a>
                     </li>
+                    <hr/>
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" className="nav-link px-sm-0 px-2">
                             <i className="fs-5 bi-speedometer2"></i><span className="ms-1 d-none d-sm-inline">Players</span> </a>
+                            <form className="d-flex" role="search">
+                                <input className="form-control me-2" type="search" placeholder="Player1" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit">Submit</button>
+                            </form>
+                            <hr/>
+                            <form className="d-flex" role="search">
+                                <input className="form-control me-2" type="search" placeholder="Player2" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit">Submit</button>
+                            </form>
                     </li>
+                    <hr/>
                     <li>
                         <a href="#" className="nav-link px-sm-0 px-2">
                             <i className="fs-5 bi-table"></i><span className="ms-1 d-none d-sm-inline">Stats</span></a>
                     </li>
-                    {/* <li className="dropdown">
-                        <a href="#" className="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i className="fs-5 bi-bootstrap"></i><span className="ms-1 d-none d-sm-inline">Bootstrap</span>
-                        </a>
-                        <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                            <li><a className="dropdown-item" href="#">New project...</a></li>
-                            <li><a className="dropdown-item" href="#">Settings</a></li>
-                            <li><a className="dropdown-item" href="#">Profile</a></li>
-                            <li>
-                                <hr className="dropdown-divider" />
-                            </li>
-                            <li><a className="dropdown-item" href="#">Sign out</a></li>
-                        </ul>
-                    </li> */}
                 </ul>
                 <div className="dropdown py-sm-4 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
                     <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,9 +52,9 @@
                         <span className="d-none d-sm-inline mx-1">Theme</span>
                     </a>
                     <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                        <li><a className="dropdown-item" href="#">White</a></li>
-                        <li><a className="dropdown-item" href="#">Dark</a></li>
-                        <li><a className="dropdown-item" href="#">Color</a></li>
+                        <Theme color="White" onChangeColor={handleChangeColor} />
+                        <Theme color="Dark" onChangeColor={handleChangeColor} />
+                        <Theme color="Color" onChangeColor={handleChangeColor} />
                     </ul>
                 </div>
             </div>

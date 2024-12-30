@@ -5,7 +5,6 @@ export class Point {
     wasReached: boolean = false;
     reachablePoints: Point[] = [];
   
-    // Konstruktor
     constructor(x: number, y: number, id:number) {
       this.x = x;
       this.y = y;
