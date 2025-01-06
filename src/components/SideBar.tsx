@@ -1,3 +1,4 @@
+import SubmitButton from "./SubmitButton";
 import Theme from "./Theme";
 
 const handleChangeColor = (color: string): void => {
@@ -11,6 +12,10 @@ const handleChangeColor = (color: string): void => {
       document.body.style.backgroundColor = "#000000";
     }
   };
+
+const handleSubmitPlayer = (name: string, playerId: number): void => {
+
+}
 
   const SideBar = () => {
     return (
@@ -32,12 +37,12 @@ const handleChangeColor = (color: string): void => {
                             <i className="fs-5 bi-speedometer2"></i><span className="ms-1 d-none d-sm-inline">Players</span> </a>
                             <form className="d-flex" role="search">
                                 <input className="form-control me-2" type="search" placeholder="Player1" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Submit</button>
+                            <SubmitButton onSubmit={handleSubmitPlayer} name="" signature ="Submit name" playerId={1} />
                             </form>
                             <hr/>
                             <form className="d-flex" role="search">
                                 <input className="form-control me-2" type="search" placeholder="Player2" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Submit</button>
+                            <SubmitButton onSubmit={handleSubmitPlayer} name=""  signature ="Submit name" playerId={2} />
                             </form>
                     </li>
                     <hr/>

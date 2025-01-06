@@ -4,11 +4,6 @@ body, html {
     background-color: #a0c4f4;
 }
 
-/* .container-fluid {
-    padding: 0;
-    margin: 0;
-} */
-
 canvas {
     border:  10px solid #1dda3d;
     border-radius: 20px;
